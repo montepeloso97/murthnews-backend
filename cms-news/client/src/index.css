@@ -1,0 +1,25 @@
+/* RESET DI BASE */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background-color: #0f172a; /* Colore di base scuro per evitare flash bianchi */
+}
+
+/* --- IL TRUCCO PER NASCONDERE LA BARRA --- */
+
+/* Per Chrome, Safari, Edge e Opera */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* Per Firefox, IE e Edge vecchio */
+* {
+  -ms-overflow-style: none;  /* IE e Edge */
+  scrollbar-width: none;  /* Firefox */
+}
