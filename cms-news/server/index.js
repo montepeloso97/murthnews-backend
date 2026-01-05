@@ -2370,5 +2370,7 @@ app.get(/.*/, (req, res) => {
 });
 // --- FINE MODIFICA ---
 
-// Avvio Server
-app.listen(5000, () => console.log(">>> Server MurthEditor attivo su porta 5000"));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`>>> Server MurthEditor attivo su porta ${PORT}`);
+});
