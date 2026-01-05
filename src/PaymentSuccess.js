@@ -12,7 +12,7 @@ function PaymentSuccess() {
   useEffect(() => {
     if (!sessionId) { navigate('/dashboard'); return; }
 
-    axios.post('http://localhost:5000/api/verify-payment', { sessionId })
+    axios.post('https://murthnews-api.onrender.com/api/verify-payment', { sessionId })
          .then(res => {
              if (res.data.success) {
                  setStatus("Pagamento Confermato! 🎉");

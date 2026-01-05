@@ -24,7 +24,7 @@ function SubscriptionManager() {
     }
 
     // 2. Carica Impostazioni (Prezzi + Interruttore)
-    axios.get('http://localhost:5000/api/settings')
+    axios.get('https://murthnews-api.onrender.com/api/settings')
          .then(res => {
              if (res.data) {
                  setPrices({
@@ -44,7 +44,7 @@ function SubscriptionManager() {
 
       setLoading(true);
       try {
-          const res = await axios.post('http://localhost:5000/api/cancel-subscription', {
+          const res = await axios.post('https://murthnews-api.onrender.com/api/cancel-subscription', {
               userId: user._id
           });
           
@@ -87,7 +87,7 @@ function SubscriptionManager() {
           if(!window.confirm("Sei sicuro di voler tornare al piano gratuito?")) return;
           
           try {
-             const res = await axios.put('http://localhost:5000/api/user/update-plan', {
+             const res = await axios.put('https://murthnews-api.onrender.com/api/user/update-plan', {
                  email: user.email, newLevel: 'free'
              });
              if(res.data.success) {
@@ -102,7 +102,7 @@ function SubscriptionManager() {
       // PAGAMENTO (UPGRADE)
       setLoading(true);
       try {
-          const res = await axios.post('http://localhost:5000/api/create-checkout-session', {
+          const res = await axios.post('https://murthnews-api.onrender.com/api/create-checkout-session', {
               plan: newLevel,
               userEmail: user.email,
               userId: user._id 

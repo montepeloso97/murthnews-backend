@@ -53,7 +53,7 @@ function UserDashboard() {
     applyTheme(savedTheme);
 
     // SYNC DATI FRESCHI DAL SERVER
-    axios.get(`http://localhost:5000/api/users/${parsedUser._id}`)
+    axios.get(`https://murthnews-api.onrender.com/api/users/${parsedUser._id}`)
          .then(res => {
              if(res.data) {
                 setUser(res.data);
@@ -63,7 +63,7 @@ function UserDashboard() {
          .catch(err => console.log("Errore sync utente:", err));
 
     // CARICA PREZZI
-    axios.get('http://localhost:5000/api/settings')
+    axios.get('https://murthnews-api.onrender.com/api/settings')
           .then(res => {
               if (res.data) {
                   setPrices({
@@ -87,7 +87,7 @@ function UserDashboard() {
       localStorage.setItem('reader_user', JSON.stringify(updatedUser));
 
       try {
-          await axios.put('http://localhost:5000/api/reader/update', {
+          await axios.put('https://murthnews-api.onrender.com/api/reader/update', {
               id: user._id,
               theme: newTheme
           });

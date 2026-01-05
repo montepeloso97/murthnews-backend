@@ -52,7 +52,7 @@ const ReaderSubs = ({ theme }) => {
 
   useEffect(() => {
     // 1. Scarica Utenti per i conteggi
-    axios.get('http://localhost:5000/api/readers').then(res => {
+    axios.get('https://murthnews-api.onrender.com/api/readers').then(res => {
       const readers = res.data;
       const s = readers.filter(r => r.livello === 'standard').length;
       const p = readers.filter(r => r.livello === 'premium').length;
@@ -61,7 +61,7 @@ const ReaderSubs = ({ theme }) => {
     });
 
     // 2. Scarica Prezzi salvati nelle Settings
-    axios.get('http://localhost:5000/api/settings').then(res => {
+    axios.get('https://murthnews-api.onrender.com/api/settings').then(res => {
         if(res.data) {
             const p = res.data.pricePremium || 1.99;
             const f = res.data.priceFull || 5.99;
@@ -74,7 +74,7 @@ const ReaderSubs = ({ theme }) => {
   const savePrices = async () => {
       try {
           // Salviamo i nuovi prezzi nel DB (usiamo la rotta settings esistente)
-          await axios.put('http://localhost:5000/api/settings', { 
+          await axios.put('https://murthnews-api.onrender.com/api/settings', { 
               pricePremium: parseFloat(tempPrices.premium), 
               priceFull: parseFloat(tempPrices.full) 
           });
@@ -189,8 +189,8 @@ const ReaderRevenue = ({ theme }) => {
         try {
             // 1. Scarichiamo INSIEME sia i Lettori che i Prezzi aggiornati
             const [readersRes, settingsRes] = await Promise.all([
-                axios.get('http://localhost:5000/api/readers'),
-                axios.get('http://localhost:5000/api/settings')
+                axios.get('https://murthnews-api.onrender.com/api/readers'),
+                axios.get('https://murthnews-api.onrender.com/api/settings')
             ]);
 
             const readers = readersRes.data;
@@ -278,7 +278,7 @@ const ReaderLogs = ({ theme }) => {
 
   useEffect(() => {
     // Scarica e inverte (i più recenti in alto)
-    axios.get('http://localhost:5000/api/readers').then(res => setReaders(res.data.reverse()));
+    axios.get('https://murthnews-api.onrender.com/api/readers').then(res => setReaders(res.data.reverse()));
   }, []);
 
   const s = {
@@ -331,7 +331,7 @@ const ActivityLogs = ({ theme }) => {
 
     const fetchLogs = () => {
         setLoading(true);
-        axios.get('http://localhost:5000/api/logs')
+        axios.get('https://murthnews-api.onrender.com/api/logs')
              .then(res => setLogs(res.data))
              .finally(() => setLoading(false));
     };
@@ -340,7 +340,7 @@ const ActivityLogs = ({ theme }) => {
 
     const clearLogs = async () => {
         if(!confirm("⚠️ ATTENZIONE: Stai per cancellare la scatola nera del sistema.\n\nProcedere?")) return;
-        await axios.delete('http://localhost:5000/api/logs');
+        await axios.delete('https://murthnews-api.onrender.com/api/logs');
         fetchLogs();
     };
 
@@ -489,7 +489,7 @@ const OnlineTicker = ({ theme }) => {
     useEffect(() => {
         const fetchOnline = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/users/online');
+                const res = await axios.get('https://murthnews-api.onrender.com/api/users/online');
                 setUsers(res.data);
             } catch (e) {}
         };
@@ -647,7 +647,7 @@ const AIChatPage = ({ user, theme }) => {
         setLoading(true);
 
         try {
-            const res = await axios.post('http://localhost:5000/api/ai/ask', { messages: updatedMsgs });
+            const res = await axios.post('https://murthnews-api.onrender.com/api/ai/ask', { messages: updatedMsgs });
             setMessages(prev => [...prev, res.data]);
         } catch (err) {
             setMessages(prev => [...prev, { role: 'assistant', content: "⚠️ Connessione instabile. Riprova." }]);
@@ -846,7 +846,7 @@ const NotificationCenter = ({ user, theme }) => {
   // Scarica notifiche (Messaggi non letti)
   const fetchNotifs = async () => {
       try {
-          const res = await axios.get('http://localhost:5000/api/messages', { params: { username: user.username } });
+          const res = await axios.get('https://murthnews-api.onrender.com/api/messages', { params: { username: user.username } });
           const all = res.data.filter(m => !m.read); 
           const sorted = all.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
           setNotifs(sorted);
@@ -863,7 +863,7 @@ const NotificationCenter = ({ user, theme }) => {
   // Gestione click notifica INTELLIGENTE
   const handleClick = async (n) => {
       // 1. Segna come letta
-      try { await axios.put(`http://localhost:5000/api/messages/${n._id}`, { read: true }); } catch(e){}
+      try { await axios.put(`https://murthnews-api.onrender.com/api/messages/${n._id}`, { read: true }); } catch(e){}
       
       setIsOpen(false);
       setUnreadCount(prev => Math.max(0, prev - 1));
@@ -1019,11 +1019,11 @@ const MailPage = ({ user, theme }) => {
     if(!background) setLoading(true);
     try {
         // 1. Carica Utenti (Rubrica)
-        const usersRes = await axios.get('http://localhost:5000/api/users');
+        const usersRes = await axios.get('https://murthnews-api.onrender.com/api/users');
         setContacts(usersRes.data.filter(u => u.username !== user.username));
 
         // 2. Carica Messaggi
-        const msgRes = await axios.get('http://localhost:5000/api/messages', { params: { username: user.username } });
+        const msgRes = await axios.get('https://murthnews-api.onrender.com/api/messages', { params: { username: user.username } });
         
         // Mappatura sicura dei dati
         let mailData = msgRes.data.map(m => ({
@@ -1076,7 +1076,7 @@ const MailPage = ({ user, theme }) => {
           setEmails(prev => prev.filter(e => e.id !== mailId)); // UI Update immediato
           if (view === 'detail') setView('list');
           setSelectedMail(null);
-          await axios.put(`http://localhost:5000/api/messages/${mailId}`, { folder: newFolder });
+          await axios.put(`https://murthnews-api.onrender.com/api/messages/${mailId}`, { folder: newFolder });
           fetchMailData(true); 
       } catch (error) { alert("Errore Server"); }
   };
@@ -1086,7 +1086,7 @@ const MailPage = ({ user, theme }) => {
       try {
           setEmails(prev => prev.filter(e => e.id !== mailId));
           if (view === 'detail') setView('list');
-          await axios.delete(`http://localhost:5000/api/messages/${mailId}`);
+          await axios.delete(`https://murthnews-api.onrender.com/api/messages/${mailId}`);
       } catch (err) { alert("Errore eliminazione"); }
   };
 
@@ -1098,7 +1098,7 @@ const MailPage = ({ user, theme }) => {
         try {
             setEmails(prev => prev.map(e => e.id === mail.id ? { ...e, read: true } : e));
             setUnreadCount(prev => Math.max(0, prev - 1));
-            await axios.put(`http://localhost:5000/api/messages/${mail.id}`, { read: true });
+            await axios.put(`https://murthnews-api.onrender.com/api/messages/${mail.id}`, { read: true });
         } catch (e) {}
     }
   };
@@ -1109,7 +1109,7 @@ const MailPage = ({ user, theme }) => {
       setLoading(true);
       const fullEmail = `${regName.toLowerCase()}@murthcms.it`;
       try {
-          await axios.put(`http://localhost:5000/api/users/${user._id}`, { internalEmail: fullEmail });
+          await axios.put(`https://murthnews-api.onrender.com/api/users/${user._id}`, { internalEmail: fullEmail });
           user.internalEmail = fullEmail; setInternalEmail(fullEmail); setHasAccount(true);
       } catch (err) { setRegError("Errore server."); } finally { setLoading(false); }
   };
@@ -1125,7 +1125,7 @@ const MailPage = ({ user, theme }) => {
       const cleanRecipient = composeTo.replace('@murthcms.it', '').trim().toLowerCase();
 
       try {
-          await axios.post('http://localhost:5000/api/messages', {
+          await axios.post('https://murthnews-api.onrender.com/api/messages', {
               sender: user.username, senderName: user.nome, senderEmail: internalEmail,
               recipient: cleanRecipient, subject: composeSubject, text: composeBody, isEmail: true,
               folder: 'inbox'
@@ -1379,7 +1379,7 @@ const NotificationsPage = ({ user, theme }) => {
   useEffect(() => {
     if (!user) return;
     // Scarica tutte le notifiche di sistema
-    axios.get('http://localhost:5000/api/messages', { params: { username: user.username } })
+    axios.get('https://murthnews-api.onrender.com/api/messages', { params: { username: user.username } })
       .then(res => {
         const esiti = res.data.filter(m => m.text && m.text.startsWith('##SISTEMA##'));
         setNotifs(esiti.reverse());
@@ -1390,7 +1390,7 @@ const NotificationsPage = ({ user, theme }) => {
   // FUNZIONE UNICA PER CANCELLARE DAL DB
   const deleteMsg = async (id) => {
       try {
-          await axios.delete(`http://localhost:5000/api/messages/${id}`);
+          await axios.delete(`https://murthnews-api.onrender.com/api/messages/${id}`);
           setNotifs(prev => prev.filter(n => n._id !== id));
       } catch (err) { console.error(err); }
   };
@@ -1497,7 +1497,7 @@ const ReviewPage = ({ user, theme }) => {
   const [rejectReason, setRejectReason] = useState('');
 
   const fetchReviews = () => {
-    axios.get('http://localhost:5000/api/news').then(res => {
+    axios.get('https://murthnews-api.onrender.com/api/news').then(res => {
       setReviews(res.data.filter(n => n.status === 'In Revisione'));
     });
   };
@@ -1509,11 +1509,11 @@ const ReviewPage = ({ user, theme }) => {
     if(!confirm(`Pubblicare "${article.title}"?`)) return;
     try {
       // 1. Aggiorna lo stato della news
-      await axios.put(`http://localhost:5000/api/news/${article._id}`, { status: 'Pubblicato' });
+      await axios.put(`https://murthnews-api.onrender.com/api/news/${article._id}`, { status: 'Pubblicato' });
       
       // 2. INVIA NOTIFICA CAMPANELLA ALL'AUTORE
       // Usiamo il formato speciale ##SISTEMA## per far scattare le icone giuste nel NotificationCenter
-      await axios.post('http://localhost:5000/api/messages', {
+      await axios.post('https://murthnews-api.onrender.com/api/messages', {
           sender: user.username, 
           senderName: "Redazione", 
           senderRole: user.role,
@@ -1533,10 +1533,10 @@ const ReviewPage = ({ user, theme }) => {
     if (!rejectReason.trim()) return alert("Scrivi il motivo del rifiuto.");
     try {
       // 1. Rimanda in Bozza
-      await axios.put(`http://localhost:5000/api/news/${article._id}`, { status: 'Bozza' });
+      await axios.put(`https://murthnews-api.onrender.com/api/news/${article._id}`, { status: 'Bozza' });
 
       // 2. INVIA NOTIFICA CAMPANELLA ALL'AUTORE
-      await axios.post('http://localhost:5000/api/messages', {
+      await axios.post('https://murthnews-api.onrender.com/api/messages', {
           sender: user.username, 
           senderName: "Redazione", 
           senderRole: user.role,
@@ -1644,7 +1644,7 @@ const MediaGallery = ({ user, theme }) => {
     const fetchImages = async () => {
       setLoading(true);
       try {
-        const res = await axios.get("http://localhost:5000/api/news");
+        const res = await axios.get("https://murthnews-api.onrender.com/api/news");
         // Trasformiamo le news in "Oggetti Galleria"
         const galleryItems = res.data
           .filter((news) => news.coverImage)
@@ -1835,11 +1835,11 @@ const BreakingNewsTicker = () => {
   const [currentTime, setCurrentTime] = useState(Date.now());
 
   const fetchAlerts = async () => {
-      try { const res = await axios.get('http://localhost:5000/api/breaking'); setAlerts(res.data); } catch (e) {}
+      try { const res = await axios.get('https://murthnews-api.onrender.com/api/breaking'); setAlerts(res.data); } catch (e) {}
   };
 
   const deleteExpired = async (id) => {
-      try { await axios.delete(`http://localhost:5000/api/breaking/${id}`); fetchAlerts(); } catch (e) {}
+      try { await axios.delete(`https://murthnews-api.onrender.com/api/breaking/${id}`); fetchAlerts(); } catch (e) {}
   };
 
   useEffect(() => {
@@ -1893,8 +1893,8 @@ const BreakingManager = ({ theme }) => {
 
     const fetchAll = async () => {
         try {
-            const a = await axios.get('http://localhost:5000/api/breaking'); setAlerts(a.data);
-            const n = await axios.get('http://localhost:5000/api/news'); 
+            const a = await axios.get('https://murthnews-api.onrender.com/api/breaking'); setAlerts(a.data);
+            const n = await axios.get('https://murthnews-api.onrender.com/api/news'); 
             // Prendo le ultime 6 pubblicate
             setRecentNews(n.data.filter(x => x.status === 'Pubblicato').slice(0, 6));
         } catch(e) {}
@@ -1905,13 +1905,13 @@ const BreakingManager = ({ theme }) => {
     const publish = async (e) => {
         e.preventDefault();
         if(!text) return;
-        await axios.post('http://localhost:5000/api/breaking', { text, link });
+        await axios.post('https://murthnews-api.onrender.com/api/breaking', { text, link });
         setText(''); setLink(''); fetchAll();
     };
 
     const deleteAlert = async (id) => {
         if(!confirm("Chiudere questa notizia?")) return;
-        await axios.delete(`http://localhost:5000/api/breaking/${id}`);
+        await axios.delete(`https://murthnews-api.onrender.com/api/breaking/${id}`);
         fetchAll();
     };
 
@@ -2061,8 +2061,8 @@ function MenuManager() {
     const fetchData = async () => {
         try {
             const [menuRes, pagesRes] = await Promise.all([
-                axios.get('http://localhost:5000/api/menu'),
-                axios.get('http://localhost:5000/api/pages')
+                axios.get('https://murthnews-api.onrender.com/api/menu'),
+                axios.get('https://murthnews-api.onrender.com/api/pages')
             ]);
             setMenuItems(menuRes.data);
             setAvailablePages(pagesRes.data);
@@ -2099,7 +2099,7 @@ function MenuManager() {
         }
 
         try {
-            await axios.post('http://localhost:5000/api/menu', payload);
+            await axios.post('https://murthnews-api.onrender.com/api/menu', payload);
             fetchData();
             // Reset
             setCustomLabel(''); setCustomLink(''); setSelectedPageId(''); setSelectedIcon('');
@@ -2108,7 +2108,7 @@ function MenuManager() {
 
     const removeItem = async (id) => {
         if(!confirm("Eliminare voce?")) return;
-        await axios.delete(`http://localhost:5000/api/menu/${id}`);
+        await axios.delete(`https://murthnews-api.onrender.com/api/menu/${id}`);
         fetchData();
     };
 
@@ -2210,7 +2210,7 @@ const PagesList = ({ theme }) => {
 
     // 1. Caricamento Dati
     useEffect(() => {
-        axios.get('http://localhost:5000/api/pages')
+        axios.get('https://murthnews-api.onrender.com/api/pages')
             .then(res => setPages(res.data))
             .catch(err => console.error(err));
     }, []);
@@ -2219,7 +2219,7 @@ const PagesList = ({ theme }) => {
     const deletePage = async (id) => {
         if(!confirm("⚠️ Attenzione: eliminare questa pagina? L'azione è irreversibile.")) return;
         try {
-            await axios.delete(`http://localhost:5000/api/pages/${id}`);
+            await axios.delete(`https://murthnews-api.onrender.com/api/pages/${id}`);
             setPages(prev => prev.filter(p => p._id !== id));
         } catch(e) { alert("Errore eliminazione"); }
     };
@@ -2394,7 +2394,7 @@ const WritePage = ({ theme }) => {
         if(id) {
             setLoading(true);
             // Usiamo la nuova rotta specifica '/edit/'
-            axios.get(`http://localhost:5000/api/pages/edit/${id}`)
+            axios.get(`https://murthnews-api.onrender.com/api/pages/edit/${id}`)
                  .then(res => {
                      console.log("DATI RICEVUTI PER MODIFICA:", res.data); // Controlla la console del browser (F12)
                      setForm(res.data);
@@ -2427,11 +2427,11 @@ const WritePage = ({ theme }) => {
         try {
             if(id) {
                 // UPDATE
-                await axios.put(`http://localhost:5000/api/pages/${id}`, form);
+                await axios.put(`https://murthnews-api.onrender.com/api/pages/${id}`, form);
                 alert("✅ Pagina Aggiornata Correttamente!");
             } else {
                 // CREATE
-                await axios.post('http://localhost:5000/api/pages', form);
+                await axios.post('https://murthnews-api.onrender.com/api/pages', form);
                 alert("✅ Pagina Creata!");
             }
             navigate('/pages');
@@ -2495,7 +2495,7 @@ const PageView = ({ theme }) => {
     useEffect(() => {
         setLoading(true);
         // NOTA: Ora usiamo la rotta specifica '/api/pages/slug/...'
-        axios.get(`http://localhost:5000/api/pages/slug/${slug}`)
+        axios.get(`https://murthnews-api.onrender.com/api/pages/slug/${slug}`)
             .then(res => {
                 setPage(res.data);
                 setLoading(false);
@@ -2564,20 +2564,20 @@ const Layout = ({ user, setUser, onLogout, theme, toggleTheme, children }) => {
 
   // AUTO-REFRESH (Mantenuto identico)
   useEffect(() => {
-      axios.get('http://localhost:5000/api/settings')
+      axios.get('https://murthnews-api.onrender.com/api/settings')
            .then(res => { if (res.data && res.data.siteName) setSiteName(res.data.siteName); })
            .catch(err => console.log("Errore settings"));
 
       const checkUpdates = async () => {
           try {
               if (!isEditorPage) {
-                  const res = await axios.get('http://localhost:5000/api/breaking');
+                  const res = await axios.get('https://murthnews-api.onrender.com/api/breaking');
                   const now = Date.now();
                   const activeOnes = res.data.filter(a => (now - new Date(a.createdAt).getTime()) < 3600000);
                   setHasActiveBreaking(activeOnes.length > 0);
               }
               if (user && user._id) {
-                  const userRes = await axios.get(`http://localhost:5000/api/users/${user._id}`);
+                  const userRes = await axios.get(`https://murthnews-api.onrender.com/api/users/${user._id}`);
                   const freshUser = userRes.data;
                   if (freshUser.hasMediaAccess !== user.hasMediaAccess || freshUser.pendingMediaRequest !== user.pendingMediaRequest) {
                       setUser(freshUser);
@@ -2678,9 +2678,9 @@ const Layout = ({ user, setUser, onLogout, theme, toggleTheme, children }) => {
                               else { 
                                   if(confirm("🔒 Galleria riservata.\n\nVuoi inviare una richiesta al Redattore per sbloccarla per 24 ore?")) { 
                                       try { 
-                                          await axios.post('http://localhost:5000/api/media/request', { userId: user._id }); 
+                                          await axios.post('https://murthnews-api.onrender.com/api/media/request', { userId: user._id }); 
                                           alert("📨 Richiesta inviata! Attendi che un redattore ti abiliti."); 
-                                          const fresh = await axios.get(`http://localhost:5000/api/users/${user._id}`);
+                                          const fresh = await axios.get(`https://murthnews-api.onrender.com/api/users/${user._id}`);
                                           setUser(fresh.data);
                                       } catch(e) {} 
                                   } 
@@ -2769,7 +2769,7 @@ const WeatherWidget = ({ theme }) => {
     const getData = async () => {
         try {
             // 1. Chiede al server: "Quali sono le impostazioni?"
-            const settingsRes = await axios.get('http://localhost:5000/api/settings');
+            const settingsRes = await axios.get('https://murthnews-api.onrender.com/api/settings');
             const { weatherCity, weatherLat, weatherLon } = settingsRes.data;
             
             // Aggiorna lo stato locale con i dati ricevuti
@@ -2833,7 +2833,7 @@ const Dashboard = ({ user, theme }) => {
   useEffect(() => {
     fetchData();
     // SCARICA SETTINGS (Colore e Immagine)
-    axios.get('http://localhost:5000/api/settings')
+    axios.get('https://murthnews-api.onrender.com/api/settings')
          .then(res => {
              if (res.data) {
                  if(res.data.dashboardColor) setDashColor(res.data.dashboardColor);
@@ -2847,8 +2847,8 @@ const Dashboard = ({ user, theme }) => {
   }, [user.username]);
 
   const fetchData = () => {
-    axios.get('http://localhost:5000/api/news').then(res => setNews(res.data));
-    axios.get('http://localhost:5000/api/messages', { params: { username: user.username } }).then(res => setMessages(res.data));
+    axios.get('https://murthnews-api.onrender.com/api/news').then(res => setNews(res.data));
+    axios.get('https://murthnews-api.onrender.com/api/messages', { params: { username: user.username } }).then(res => setMessages(res.data));
   };
 
   const handleNoteChange = (e) => {
@@ -2869,10 +2869,10 @@ const Dashboard = ({ user, theme }) => {
       try {
           let results = [];
           if (searchType === 'news') {
-              const res = await axios.get('http://localhost:5000/api/search/news', { params: { q: searchQuery } });
+              const res = await axios.get('https://murthnews-api.onrender.com/api/search/news', { params: { q: searchQuery } });
               results = res.data.map(n => ({ ...n, type: 'news' }));
           } else {
-              const res = await axios.get('http://localhost:5000/api/search/users', { params: { q: searchQuery } });
+              const res = await axios.get('https://murthnews-api.onrender.com/api/search/users', { params: { q: searchQuery } });
               results = res.data.map(u => ({ ...u, type: 'user' }));
           }
           setSearchResults(results.slice(0, 4));
@@ -3121,7 +3121,7 @@ const UsersList = ({ theme }) => {
 
   // Carica utenti
   const fetchUsers = () => {
-      axios.get('http://localhost:5000/api/users').then(res => setUsers(res.data));
+      axios.get('https://murthnews-api.onrender.com/api/users').then(res => setUsers(res.data));
   };
 
   useEffect(() => { fetchUsers(); }, []);
@@ -3129,7 +3129,7 @@ const UsersList = ({ theme }) => {
   const deleteUser = async (id) => { 
       if(confirm("Eliminare definitivamente?")) { 
           try { 
-              await axios.delete(`http://localhost:5000/api/users/${id}`); 
+              await axios.delete(`https://murthnews-api.onrender.com/api/users/${id}`); 
               setUsers(prev => prev.filter(u => u._id !== id)); 
           } catch (err) { alert("Errore"); }
       }
@@ -3138,7 +3138,7 @@ const UsersList = ({ theme }) => {
   const toggleBlockUser = async (id, currentStatus) => { 
       try { 
           const newStatus = !currentStatus; 
-          await axios.put(`http://localhost:5000/api/users/${id}`, { isBlocked: newStatus }); 
+          await axios.put(`https://murthnews-api.onrender.com/api/users/${id}`, { isBlocked: newStatus }); 
           setUsers(prev => prev.map(u => u._id === id ? { ...u, isBlocked: newStatus } : u)); 
       } catch (err) { alert("Errore"); }
   };
@@ -3147,7 +3147,7 @@ const UsersList = ({ theme }) => {
   const handleMediaRequest = async (userId, allow) => {
       try {
           // Questa chiamata al server fa tutto: aggiorna DB e crea il Messaggio per la campanella
-          await axios.post('http://localhost:5000/api/media/approve', { userId, allow });
+          await axios.post('https://murthnews-api.onrender.com/api/media/approve', { userId, allow });
           
           if (allow) alert("✅ Accesso concesso (24h). Notifica inviata.");
           else alert("🚫 Accesso negato/revocato. Notifica inviata.");
@@ -3306,7 +3306,7 @@ const UserCreate = ({ theme }) => {
           profileImage: imgData   // Forza salvataggio su profileImage
       };
 
-      const res = await axios.post('http://localhost:5000/api/users/create', payload);
+      const res = await axios.post('https://murthnews-api.onrender.com/api/users/create', payload);
       alert(`Utente creato: ${res.data.username}`);
       navigate('/users');
     } catch(err) { 
@@ -3369,7 +3369,7 @@ const UserEdit = ({ user, theme }) => {
 
   // 1. CARICAMENTO DATI
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/users/${id}`)
+    axios.get(`https://murthnews-api.onrender.com/api/users/${id}`)
       .then(res => {
         const data = res.data;
         if (user.role !== 'Redattore' && user._id !== data._id) {
@@ -3390,7 +3390,7 @@ const UserEdit = ({ user, theme }) => {
       const payload = { ...form };
       if (!payload.password) delete payload.password;
       
-      await axios.put(`http://localhost:5000/api/users/${id}`, payload);
+      await axios.put(`https://murthnews-api.onrender.com/api/users/${id}`, payload);
       alert("✅ Profilo salvato!");
       
       if (user._id === id) window.location.href = '/'; 
@@ -3572,7 +3572,7 @@ const ReadNews = ({ user, theme }) => {
   const [article, setArticle] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/news/${id}`)
+    axios.get(`https://murthnews-api.onrender.com/api/news/${id}`)
       .then(res => setArticle(res.data))
       .catch(() => alert("Notizia non trovata"));
   }, [id]);
@@ -3743,7 +3743,7 @@ const WriteNews = ({ user, theme }) => {
         try {
             console.log("🔒 Chiedo il blocco al server per:", user.username); // <--- DEBUG 1
 
-            const res = await axios.post(`http://localhost:5000/api/news/lock/${id}`, { 
+            const res = await axios.post(`https://murthnews-api.onrender.com/api/news/lock/${id}`, { 
                 username: user.username || user.nome 
             });
 
@@ -3766,7 +3766,7 @@ const WriteNews = ({ user, theme }) => {
     return () => {
         clearInterval(interval);
         if (user) {
-            axios.post(`http://localhost:5000/api/news/unlock/${id}`, { 
+            axios.post(`https://murthnews-api.onrender.com/api/news/unlock/${id}`, { 
                 username: user.username || user.nome 
             }).catch(e => {});
         }
@@ -3776,13 +3776,13 @@ const WriteNews = ({ user, theme }) => {
   // 1. INIT DATI
   useEffect(() => {
     if (isLocked) return;
-    axios.get('http://localhost:5000/api/categories').then(res => {
+    axios.get('https://murthnews-api.onrender.com/api/categories').then(res => {
         setCategories(res.data);
         if(!id && res.data.length > 0 && !form.category) setForm(f => ({ ...f, category: res.data[0].name }));
     });
 
     // --- AGGIUNGI QUESTO BLOCCO QUI SOTTO ---
-    axios.get('http://localhost:5000/api/news').then(res => {
+    axios.get('https://murthnews-api.onrender.com/api/news').then(res => {
         // Scarica tutto, ma escludi la notizia che sto modificando ora (se c'è un id)
         const published = res.data.filter(n => n.status === 'Pubblicato' && n._id !== id);
         setAllNews(published);
@@ -3796,7 +3796,7 @@ const WriteNews = ({ user, theme }) => {
     }
 
     if (id) {
-        axios.get(`http://localhost:5000/api/news/${id}`).then(res => {
+        axios.get(`https://murthnews-api.onrender.com/api/news/${id}`).then(res => {
             const article = res.data;
             if (!isRedattore && article.author !== user.username) {
                 alert("⛔ Accesso Negato."); navigate('/'); return;
@@ -3959,7 +3959,7 @@ const WriteNews = ({ user, theme }) => {
 
     setAiLoading(true);
     try {
-      const res = await axios.post('http://localhost:5000/api/generate-ai-title', {
+      const res = await axios.post('https://murthnews-api.onrender.com/api/generate-ai-title', {
         draftText: textBase
       });
 
@@ -4053,8 +4053,8 @@ const WriteNews = ({ user, theme }) => {
           }
       }
 
-      if (id) await axios.put(`http://localhost:5000/api/news/${id}`, payload);
-      else await axios.post('http://localhost:5000/api/news', payload);
+      if (id) await axios.put(`https://murthnews-api.onrender.com/api/news/${id}`, payload);
+      else await axios.post('https://murthnews-api.onrender.com/api/news', payload);
       
       localStorage.removeItem(id ? `autosave_${id}` : 'autosave_new_article');
       navigate('/news-list');
@@ -4650,7 +4650,7 @@ const NewsList = ({ user, theme }) => {
 
   // 1. CARICAMENTO
   useEffect(() => {
-    axios.get('http://localhost:5000/api/news')
+    axios.get('https://murthnews-api.onrender.com/api/news')
       .then(res => {
         const sorted = res.data.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
         setNews(sorted);
@@ -4704,7 +4704,7 @@ const NewsList = ({ user, theme }) => {
   const deleteNews = async (id) => {
     if(window.confirm("Sei sicuro di voler eliminare questo articolo?")) {
         try {
-            await axios.delete(`http://localhost:5000/api/news/${id}`);
+            await axios.delete(`https://murthnews-api.onrender.com/api/news/${id}`);
             setNews(prev => prev.filter(n => n._id !== id));
         } catch(e) { alert("Errore eliminazione."); }
     }
@@ -4962,11 +4962,11 @@ const SearchResultsPage = ({ user, theme }) => {
         setLoading(true);
         try {
             // Cerca News
-            const resNews = await axios.get(`http://localhost:5000/api/search/news?q=${query}`);
+            const resNews = await axios.get(`https://murthnews-api.onrender.com/api/search/news?q=${query}`);
             setNewsResults(resNews.data);
 
             // Cerca Utenti
-            const resUsers = await axios.get(`http://localhost:5000/api/search/users?q=${query}`);
+            const resUsers = await axios.get(`https://murthnews-api.onrender.com/api/search/users?q=${query}`);
             setUserResults(resUsers.data);
         } catch (error) {
             console.error(error);
@@ -5076,13 +5076,13 @@ const UserProfile = ({ currentUser, theme }) => {
 
   useEffect(() => {
     // 1. Scarica i dati del profilo (inclusi i dati sensibili se inviati dal server)
-    axios.get(`http://localhost:5000/api/users/profile/${id}`).then(res => {
+    axios.get(`https://murthnews-api.onrender.com/api/users/profile/${id}`).then(res => {
         const userData = res.data;
         setProfile(userData);
 
         // 2. Scarica le news dell'autore
         if (userData && userData.username) {
-            axios.get(`http://localhost:5000/api/news`, { 
+            axios.get(`https://murthnews-api.onrender.com/api/news`, { 
                 params: { author: userData.username } 
             })
             .then(newsRes => {
@@ -5263,7 +5263,7 @@ const CategoriesManager = ({ theme }) => {
 
   // 1. Carica categorie
   useEffect(() => {
-    axios.get('http://localhost:5000/api/categories')
+    axios.get('https://murthnews-api.onrender.com/api/categories')
       .then(res => setCategories(res.data))
       .catch(err => console.error(err));
   }, []);
@@ -5274,7 +5274,7 @@ const CategoriesManager = ({ theme }) => {
     if (!newCat.trim()) return;
     setLoading(true);
     try {
-      const res = await axios.post('http://localhost:5000/api/categories', { name: newCat });
+      const res = await axios.post('https://murthnews-api.onrender.com/api/categories', { name: newCat });
       setCategories([...categories, res.data]);
       setNewCat('');
     } catch (err) {
@@ -5287,7 +5287,7 @@ const CategoriesManager = ({ theme }) => {
   const deleteCategory = async (id) => {
     if (!confirm("Eliminare definitivamente questa categoria?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/categories/${id}`);
+      await axios.delete(`https://murthnews-api.onrender.com/api/categories/${id}`);
       setCategories(categories.filter(c => c._id !== id));
     } catch (err) { alert("Errore eliminazione"); }
   };
@@ -5430,7 +5430,7 @@ const LoginPage = ({ onLogin }) => {
         setError('');
         try {
             // Simuliamo il percorso standard di login
-        const res = await axios.post('http://localhost:5000/api/login', { username, password });
+        const res = await axios.post('https://murthnews-api.onrender.com/api/login', { username, password });
             onLogin(res.data.user);
         } catch (err) {
             setError('Credenziali non valide o errore server.');
@@ -5475,7 +5475,7 @@ const LiveManager = ({ theme }) => {
 
     // 1. Carica articoli
     const fetchArticles = async () => {
-        const res = await axios.get('http://localhost:5000/api/news');
+        const res = await axios.get('https://murthnews-api.onrender.com/api/news');
         const sorted = res.data
             .filter(n => n.status === 'Pubblicato')
             .sort((a,b) => (b.isLive === a.isLive) ? 0 : b.isLive ? 1 : -1);
@@ -5487,7 +5487,7 @@ const LiveManager = ({ theme }) => {
     const refreshSelected = async () => {
         fetchArticles(); 
         if(selected) {
-            const fresh = await axios.get(`http://localhost:5000/api/news/${selected._id}`);
+            const fresh = await axios.get(`https://murthnews-api.onrender.com/api/news/${selected._id}`);
             setSelected(fresh.data);
         }
     };
@@ -5496,7 +5496,7 @@ const LiveManager = ({ theme }) => {
         if(!text.trim() || !selected) return;
         setLoading(true);
         try {
-            await axios.post(`http://localhost:5000/api/news/${selected._id}/live-update`, { text });
+            await axios.post(`https://murthnews-api.onrender.com/api/news/${selected._id}/live-update`, { text });
             setText('');
             refreshSelected(); 
         } catch(e) { alert("Errore invio"); }
@@ -5506,7 +5506,7 @@ const LiveManager = ({ theme }) => {
     const deleteUpdate = async (updateId) => {
         if(!confirm("Eliminare questo aggiornamento?")) return;
         try {
-            await axios.delete(`http://localhost:5000/api/news/${selected._id}/live-update/${updateId}`);
+            await axios.delete(`https://murthnews-api.onrender.com/api/news/${selected._id}/live-update/${updateId}`);
             refreshSelected();
         } catch(e) { alert("Errore eliminazione"); }
     };
@@ -5521,7 +5521,7 @@ const LiveManager = ({ theme }) => {
         
         try {
             // MODIFICA QUI: Usiamo la nuova rotta specifica "/toggle-live"
-            await axios.put(`http://localhost:5000/api/news/${selected._id}/toggle-live`, { isLive: newStatus });
+            await axios.put(`https://murthnews-api.onrender.com/api/news/${selected._id}/toggle-live`, { isLive: newStatus });
             
             // Ricarichiamo i dati per vedere il cambiamento (bottone rosso/verde)
             refreshSelected();
@@ -5807,7 +5807,7 @@ function App() {
     const updatedUser = { ...user, theme: newTheme };
     setUser(updatedUser);
     localStorage.setItem('cms_user', JSON.stringify(updatedUser));
-    try { await axios.put(`http://localhost:5000/api/users/${user._id}`, { theme: newTheme }); } catch (err) {}
+    try { await axios.put(`https://murthnews-api.onrender.com/api/users/${user._id}`, { theme: newTheme }); } catch (err) {}
   };
 
   // --- RENDER ---
@@ -5844,7 +5844,7 @@ const SettingsPage = ({ theme }) => {
     ];
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/settings').then(res => {
+        axios.get('https://murthnews-api.onrender.com/api/settings').then(res => {
             if (res.data) {
                 // Uniamo i dati ricevuti con i default
                 setForm(prev => ({ ...prev, ...res.data }));
@@ -5855,7 +5855,7 @@ const SettingsPage = ({ theme }) => {
     const save = async () => {
         setLoading(true);
         try {
-            await axios.put('http://localhost:5000/api/settings', form);
+            await axios.put('https://murthnews-api.onrender.com/api/settings', form);
             alert("✅ Impostazioni salvate con successo!");
         } catch (e) { alert("Errore salvataggio"); } 
         finally { setLoading(false); }

@@ -13,7 +13,7 @@ const { getVerificationEmailHtml } = require('./virtual/emailTemplate');
 
 // --- 1. CONFIGURAZIONE STRIPE (NUOVO) ---
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY.trim());
-const CLIENT_URL = 'http://localhost:3000'; 
+const CLIENT_URL = 'https://www.murthnews.com'; 
 
 // 🔥 AGGIUNGI QUESTA RIGA QUI SOTTO PER IL DEBUG:
 console.log(">>> CHECK STRIPE KEY:", process.env.STRIPE_SECRET_KEY ? "✅ Chiave Presente" : "❌ Chiave NON TROVATA (Controlla .env)");
@@ -28,7 +28,17 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // Middleware
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
-app.use(cors()); 
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "https://www.murthnews.com",
+    "https://murthnews.com",
+    "https://www.murtheditor.com",
+    "https://murtheditor.com"
+  ],
+  credentials: true
+}));
 
 // --- GESTIONE LETTORI (CMS) ---
 

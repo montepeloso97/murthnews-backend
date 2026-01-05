@@ -50,13 +50,13 @@ function Home() {
         const fetchData = async () => {
             try {
                 // 1. News Normali
-                const res = await axios.get('http://localhost:5000/api/news');
+                const res = await axios.get('https://murthnews-api.onrender.com/api/news');
                 const published = res.data.filter(n => n.status === 'Pubblicato');
                 setNews(published);
 
                 // 2. BREAKING NEWS
                 try {
-                    const resBreak = await axios.get('http://localhost:5000/api/breaking');
+                    const resBreak = await axios.get('https://murthnews-api.onrender.com/api/breaking');
                     if (resBreak.data) {
                         const dataList = Array.isArray(resBreak.data) ? resBreak.data : [resBreak.data];
                         if (dataList.length > 0) {
@@ -73,7 +73,7 @@ function Home() {
                 if (storedUser) {
                     const parsed = JSON.parse(storedUser);
                     setUser(parsed);
-                    axios.get(`http://localhost:5000/api/users/${parsed._id}`)
+                    axios.get(`https://murthnews-api.onrender.com/api/users/${parsed._id}`)
                         .then(u => {
                             if (u.data) {
                                 setUser(u.data);
@@ -85,7 +85,7 @@ function Home() {
 
                 // 4. ADS / SPONSOR (CORRETTO: URL /api/settings come in NewsPage)
                 try {
-                    const settingsRes = await axios.get('http://localhost:5000/api/settings');
+                    const settingsRes = await axios.get('https://murthnews-api.onrender.com/api/settings');
                     setAdSettings(settingsRes.data);
                 } catch (e) {
                     console.error("❌ ERRORE ADS:", e.message);
@@ -149,7 +149,7 @@ function Home() {
         e.stopPropagation();
         if (!user) return navigate('/login');
         try {
-            const res = await axios.post('http://localhost:5000/api/user/toggle-like', { userId: user._id, articleId });
+            const res = await axios.post('https://murthnews-api.onrender.com/api/user/toggle-like', { userId: user._id, articleId });
             setNews(prev => prev.map(n => n._id === articleId ? { ...n, likes: res.data.likes } : n));
             const updatedUser = { ...user, likedArticles: res.data.user.likedArticles };
             setUser(updatedUser);
@@ -161,7 +161,7 @@ function Home() {
         e.stopPropagation();
         if (!user) return navigate('/login');
         try {
-            const res = await axios.post('http://localhost:5000/api/user/toggle-save', { userId: user._id, articleId });
+            const res = await axios.post('https://murthnews-api.onrender.com/api/user/toggle-save', { userId: user._id, articleId });
             const updatedUser = { ...user, savedArticles: res.data.user.savedArticles };
             setUser(updatedUser);
             localStorage.setItem('reader_user', JSON.stringify(updatedUser));
@@ -204,7 +204,7 @@ function Home() {
     useEffect(() => {
         if (mainSecondPage && mainSecondPage.author) {
             // Cerca l'utente nel DB usando il nome autore
-            axios.get(`http://localhost:5000/api/search/users?q=${mainSecondPage.author}`)
+            axios.get(`https://murthnews-api.onrender.com/api/search/users?q=${mainSecondPage.author}`)
                 .then(res => {
                     if (res.data && res.data.length > 0) {
                         setSecondPageAuthor(res.data[0]);

@@ -39,10 +39,10 @@ const SearchPage = () => {
         setLoading(true);
         try {
             const [resNews, resUsers, resPages, resCats] = await Promise.all([
-                axios.get('http://localhost:5000/api/news'),
-                axios.get('http://localhost:5000/api/users'),
-                axios.get('http://localhost:5000/api/pages'),
-                axios.get('http://localhost:5000/api/categories')
+                axios.get('https://murthnews-api.onrender.com/api/news'),
+                axios.get('https://murthnews-api.onrender.com/api/users'),
+                axios.get('https://murthnews-api.onrender.com/api/pages'),
+                axios.get('https://murthnews-api.onrender.com/api/categories')
             ]);
 
             const qLower = query.toLowerCase();

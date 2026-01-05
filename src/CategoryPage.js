@@ -63,7 +63,7 @@ function CategoryPage() {
                 if (storedUserString) {
                     const localUser = JSON.parse(storedUserString);
                     try {
-                        const userRes = await axios.get(`http://localhost:5000/api/reader/status/${localUser._id}`);
+                        const userRes = await axios.get(`https://murthnews-api.onrender.com/api/reader/status/${localUser._id}`);
                         currentUser = userRes.data;
                         setUser(currentUser);
                         if (currentUser.theme) setTheme(currentUser.theme);
@@ -71,7 +71,7 @@ function CategoryPage() {
                 } else { setUser(null); }
 
                 // News
-                const res = await axios.get('http://localhost:5000/api/news');
+                const res = await axios.get('https://murthnews-api.onrender.com/api/news');
                 const targetCat = normalize(name);
                 
                 const categoryNews = res.data.filter(item => {
@@ -107,7 +107,7 @@ function CategoryPage() {
         setTheme(newTheme);
         localStorage.setItem('site_theme', newTheme);
         if (user) {
-            try { await axios.put('http://localhost:5000/api/reader/update', { id: user._id, theme: newTheme }); } catch (e) {}
+            try { await axios.put('https://murthnews-api.onrender.com/api/reader/update', { id: user._id, theme: newTheme }); } catch (e) {}
         }
     };
 

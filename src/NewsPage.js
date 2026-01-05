@@ -43,7 +43,7 @@ function NewsPage() {
 
         try {
             // CHIAMATA API
-            await axios.put(`http://localhost:5000/api/reader/follow`, { 
+            await axios.put(`https://murthnews-api.onrender.com/api/reader/follow`, { 
                 userId: user._id, 
                 targetId: targetId 
             });
@@ -142,7 +142,7 @@ function NewsPage() {
                 if (storedUserString) {
                     try {
                         const localUser = JSON.parse(storedUserString);
-                        const userRes = await axios.get(`http://localhost:5000/api/reader/status/${localUser._id}`);
+                        const userRes = await axios.get(`https://murthnews-api.onrender.com/api/reader/status/${localUser._id}`);
                         currentUser = userRes.data;
                         setUser(currentUser);
                         localStorage.setItem('reader_user', JSON.stringify(currentUser)); 
@@ -151,7 +151,7 @@ function NewsPage() {
                 }
 
                 // ARTICOLO CORRENTE
-                const resArticle = await axios.get(`http://localhost:5000/api/news/slug/${slug}`);
+                const resArticle = await axios.get(`https://murthnews-api.onrender.com/api/news/slug/${slug}`);
                 const art = resArticle.data;
 
                 // --- BLOCCO DI SICUREZZA (Privati / Data Futura) ---
@@ -179,7 +179,7 @@ function NewsPage() {
                 setLikesCount(art.likes || 0);
 
                 // RECUPERO TUTTE LE NEWS (Per Correlate e Popolari)
-                const resAll = await axios.get('http://localhost:5000/api/news');
+                const resAll = await axios.get('https://murthnews-api.onrender.com/api/news');
                 const allNews = resAll.data;
 
                 // A. CORRELATE (Stessa Categoria)
@@ -204,7 +204,7 @@ function NewsPage() {
                 if (art.author) {
                     try {
                         // Aggiunto encodeURIComponent per gestire spazi e caratteri speciali nei nomi
-                        const resAuthor = await axios.get(`http://localhost:5000/api/search/users?q=${encodeURIComponent(art.author)}`);
+                        const resAuthor = await axios.get(`https://murthnews-api.onrender.com/api/search/users?q=${encodeURIComponent(art.author)}`);
                         const found = (resAuthor.data && resAuthor.data.length > 0) ? resAuthor.data[0] : null;
                         setAuthorData(found);
                     } catch(e) {}
@@ -212,7 +212,7 @@ function NewsPage() {
 
                 // SETTINGS
                 try {
-                    const settingsRes = await axios.get('http://localhost:5000/api/settings');
+                    const settingsRes = await axios.get('https://murthnews-api.onrender.com/api/settings');
                     setAdSettings(settingsRes.data);
                 } catch(e) {}
 
@@ -241,7 +241,7 @@ function NewsPage() {
         setTheme(newTheme);
         localStorage.setItem('site_theme', newTheme);
         if (user) {
-            try { await axios.put('http://localhost:5000/api/reader/update', { id: user._id, theme: newTheme }); } catch(e){}
+            try { await axios.put('https://murthnews-api.onrender.com/api/reader/update', { id: user._id, theme: newTheme }); } catch(e){}
         }
     };
 
@@ -301,7 +301,7 @@ function NewsPage() {
                 try {
                     // Scarichiamo gli utenti per trovare chi corrisponde al nome
                     // ATTENZIONE: Se hai un endpoint diverso per gli utenti, cambialo qui
-                    const res = await axios.get('http://localhost:5000/api/users'); 
+                    const res = await axios.get('https://murthnews-api.onrender.com/api/users'); 
                     const allUsers = res.data;
                     const nameToFind = article.author.toLowerCase().trim();
 
@@ -329,14 +329,14 @@ function NewsPage() {
     const handleLike = async () => { 
         if (!user) return navigate('/login');
         const prevLiked = isLiked; setIsLiked(!isLiked); setLikesCount(prev => !prevLiked ? prev + 1 : prev - 1);
-        try { await axios.post('http://localhost:5000/api/user/toggle-like', { userId: user._id, articleId: article._id }); } 
+        try { await axios.post('https://murthnews-api.onrender.com/api/user/toggle-like', { userId: user._id, articleId: article._id }); } 
         catch (e) { setIsLiked(prevLiked); setLikesCount(prev => prevLiked ? prev + 1 : prev - 1); }
     };
 
     const handleSave = async () => { 
         if (!user) return navigate('/login');
         const prevSaved = isSaved; setIsSaved(!isSaved); 
-        try { await axios.post('http://localhost:5000/api/user/toggle-save', { userId: user._id, articleId: article._id }); } 
+        try { await axios.post('https://murthnews-api.onrender.com/api/user/toggle-save', { userId: user._id, articleId: article._id }); } 
         catch (e) { setIsSaved(prevSaved); }
     };
 

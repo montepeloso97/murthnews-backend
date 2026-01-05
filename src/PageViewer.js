@@ -40,7 +40,7 @@ function PageViewer() {
         const fetchPage = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get(`http://localhost:5000/api/pages/slug/${slug}`);
+                const res = await axios.get(`https://murthnews-api.onrender.com/api/pages/slug/${slug}`);
                 setPage(res.data);
                 setLoading(false);
             } catch (err) {
@@ -53,7 +53,7 @@ function PageViewer() {
 
         const fetchSettings = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/settings');
+                const res = await axios.get('https://murthnews-api.onrender.com/api/settings');
                 if (res.data) {
                     setLogoUrl(res.data.logoUrl);
                     setSiteName(res.data.siteName || 'MurthNews');
@@ -95,7 +95,7 @@ function PageViewer() {
             localStorage.setItem('reader_user', JSON.stringify(updatedUser)); 
             
             try {
-                const url = user.livello ? 'http://localhost:5000/api/reader/update' : `http://localhost:5000/api/users/${user._id}`;
+                const url = user.livello ? 'https://murthnews-api.onrender.com/api/reader/update' : `https://murthnews-api.onrender.com/api/users/${user._id}`;
                 const payload = user.livello ? { id: user._id, theme: newTheme } : { theme: newTheme };
                 await axios.put(url, payload);
             } catch (e) {}

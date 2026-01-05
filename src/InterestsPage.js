@@ -30,10 +30,10 @@ function InterestsPage() {
                 let data = [];
                 // Se l'utente ha interessi, filtra. Altrimenti prendi le ultime.
                 if (u.interessi && u.interessi.length > 0) {
-                    const res = await axios.post('http://localhost:5000/api/news/by-interests', { interests: u.interessi });
+                    const res = await axios.post('https://murthnews-api.onrender.com/api/news/by-interests', { interests: u.interessi });
                     data = res.data;
                 } else {
-                    const res = await axios.get('http://localhost:5000/api/news');
+                    const res = await axios.get('https://murthnews-api.onrender.com/api/news');
                     data = res.data;
                 }
 

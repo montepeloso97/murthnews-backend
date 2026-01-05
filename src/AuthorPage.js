@@ -63,7 +63,7 @@ function AuthorPage() {
             if (id && id !== 'guest') {
                 try {
                     // Header no-cache per evitare che il browser usi il vecchio JSON
-                    const res = await axios.get(`http://localhost:5000/api/reader/status/${id}?nocache=${Date.now()}`, {
+                    const res = await axios.get(`https://murthnews-api.onrender.com/api/reader/status/${id}?nocache=${Date.now()}`, {
                         headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache', 'Expires': '0' }
                     });
                     authorData = res.data;
@@ -90,7 +90,7 @@ function AuthorPage() {
 
             // D. Articoli
             try {
-                const newsRes = await axios.get(`http://localhost:5000/api/news?_t=${Date.now()}`);
+                const newsRes = await axios.get(`https://murthnews-api.onrender.com/api/news?_t=${Date.now()}`);
                 const allNews = newsRes.data;
                 const n = (authorData.nome || "").toLowerCase().trim();
                 const c = (authorData.cognome || "").toLowerCase().trim();
@@ -138,7 +138,7 @@ function AuthorPage() {
         setIsFollowing(!wasFollowing);
         setAuthor(prev => ({...prev, followersCount: wasFollowing ? (prev.followersCount - 1) : (prev.followersCount + 1)}));
         try {
-            await axios.put(`http://localhost:5000/api/reader/follow`, { userId: user._id, targetId: author._id });
+            await axios.put(`https://murthnews-api.onrender.com/api/reader/follow`, { userId: user._id, targetId: author._id });
             const updated = { ...user };
             if (!updated.following) updated.following = [];
             if (wasFollowing) updated.following = updated.following.filter(fid => fid !== author._id);
@@ -153,7 +153,7 @@ function AuthorPage() {
         if (!user) return alert("Login necessario.");
         setSendingEmail(true);
         try {
-            await axios.post('http://localhost:5000/api/contact/author', {
+            await axios.post('https://murthnews-api.onrender.com/api/contact/author', {
                 senderName: `${user.nome} ${user.cognome}`,
                 senderEmail: user.email,
                 recipientEmail: author.email, 

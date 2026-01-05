@@ -25,7 +25,7 @@ const PolicyPage = ({ theme = 'dark' }) => {
     window.addEventListener('scroll', handleScroll);
 
     // 1. Recupera Prezzi
-    axios.get('http://localhost:5000/api/settings')
+    axios.get('https://murthnews-api.onrender.com/api/settings')
       .then(res => { if (res.data) setPrices({ premium: res.data.pricePremium || 1.99, full: res.data.priceFull || 5.99 }); })
       .catch(() => {});
 
@@ -34,7 +34,7 @@ const PolicyPage = ({ theme = 'dark' }) => {
     if (stored) { try { setCurrentUser(JSON.parse(stored)); } catch (e) {} }
 
     // 3. Team (Staff)
-    axios.get('http://localhost:5000/api/users') 
+    axios.get('https://murthnews-api.onrender.com/api/users') 
       .then(res => {
           const allowedRoles = ['admin', 'editor', 'journalist', 'moderator', 'amministratore', 'redattore', 'giornalista', 'editore'];
           const staff = res.data.filter(u => u.role && allowedRoles.includes(u.role.toLowerCase()));

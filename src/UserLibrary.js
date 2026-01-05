@@ -35,7 +35,7 @@ function UserLibrary() {
         if (parsedUser.theme) setTheme(parsedUser.theme);
 
         // Chiamata al Server
-        axios.get(`http://localhost:5000/api/user/${parsedUser._id}/library`)
+        axios.get(`https://murthnews-api.onrender.com/api/user/${parsedUser._id}/library`)
             .then(res => {
                 console.log("DATI DAL SERVER:", res.data); // Guarda la console del browser (F12)
                 setSaved(res.data.saved || []);

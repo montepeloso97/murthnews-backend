@@ -44,7 +44,7 @@ function SearchTotal() {
             if (!query) return;
             setLoading(true);
             try {
-                const res = await axios.get(`http://localhost:5000/api/search/news?q=${query}`);
+                const res = await axios.get(`https://murthnews-api.onrender.com/api/search/news?q=${query}`);
                 setResults(res.data);
             } catch (err) { console.error("Errore ricerca:", err); } 
             finally { setLoading(false); }
@@ -54,7 +54,7 @@ function SearchTotal() {
         // 2. CARICA SETTINGS HEADER
         const fetchSettings = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/settings');
+                const res = await axios.get('https://murthnews-api.onrender.com/api/settings');
                 if (res.data) {
                     setLogoUrl(res.data.logoUrl);
                     setSiteName(res.data.siteName || 'MurthNews');
@@ -104,7 +104,7 @@ function SearchTotal() {
             setUser(updatedUser);
             localStorage.setItem('reader_user', JSON.stringify(updatedUser)); 
             try {
-                const url = user.livello ? 'http://localhost:5000/api/reader/update' : `http://localhost:5000/api/users/${user._id}`;
+                const url = user.livello ? 'https://murthnews-api.onrender.com/api/reader/update' : `https://murthnews-api.onrender.com/api/users/${user._id}`;
                 const payload = user.livello ? { id: user._id, theme: newTheme } : { theme: newTheme };
                 await axios.put(url, payload);
             } catch (e) {}

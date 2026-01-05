@@ -27,7 +27,7 @@ function RegisterReader() {
 
   // 1. SCARICA IMPOSTAZIONI
   useEffect(() => {
-      axios.get('http://localhost:5000/api/settings')
+      axios.get('https://murthnews-api.onrender.com/api/settings')
            .then(res => {
                if (res.data) {
                    setPrices({
@@ -54,7 +54,7 @@ function RegisterReader() {
 
     setChecking(true);
     try {
-        const res = await axios.post('http://localhost:5000/api/check-email', { email: formData.email });
+        const res = await axios.post('https://murthnews-api.onrender.com/api/check-email', { email: formData.email });
         setChecking(false);
         setEmailOk(true);
 
@@ -85,7 +85,7 @@ function RegisterReader() {
 
   const handleResendPin = async () => {
     try {
-        await axios.post('http://localhost:5000/api/resend-pin', { email: formData.email });
+        await axios.post('https://murthnews-api.onrender.com/api/resend-pin', { email: formData.email });
         alert("Nuovo codice inviato!");
     } catch (e) { alert("Errore invio codice"); }
   };
@@ -106,7 +106,7 @@ function RegisterReader() {
     // LOGIN
     if (isReturningUser) {
         try {
-            const res = await axios.post('http://localhost:5000/api/login', { 
+            const res = await axios.post('https://murthnews-api.onrender.com/api/login', { 
                 email: formData.email, password: formData.password 
             });
             if (res.data.user.emailVerificata === false) {
@@ -122,7 +122,7 @@ function RegisterReader() {
     if (step === 4) {
         try {
             // 1. Verifica il PIN
-            const res = await axios.post('http://localhost:5000/api/verify-pin', { email: formData.email, pin: pinCode });
+            const res = await axios.post('https://murthnews-api.onrender.com/api/verify-pin', { email: formData.email, pin: pinCode });
             const user = res.data.user;
 
             // Salva l'utente (che per ora è STANDARD)
@@ -131,7 +131,7 @@ function RegisterReader() {
             // 2. SE HA SCELTO UN PIANO A PAGAMENTO -> VAI A STRIPE
             if (selectedPlan && selectedPlan !== 'free') {
                 try {
-                    const stripeRes = await axios.post('http://localhost:5000/api/create-checkout-session', {
+                    const stripeRes = await axios.post('https://murthnews-api.onrender.com/api/create-checkout-session', {
                         plan: selectedPlan,
                         userEmail: user.email,
                         userId: user._id
@@ -156,7 +156,7 @@ function RegisterReader() {
         if (!selectedPlan) return alert("Scegli un piano.");
         try {
             // 🔥 TRUCCO: Lo registriamo SEMPRE come 'standard' all'inizio.
-            await axios.post('http://localhost:5000/api/register', { 
+            await axios.post('https://murthnews-api.onrender.com/api/register', { 
                 ...formData, 
                 livello: 'standard' 
             });

@@ -48,7 +48,7 @@ function UserSettings() {
         }
 
         // Carica Categorie
-        axios.get('http://localhost:5000/api/categories')
+        axios.get('https://murthnews-api.onrender.com/api/categories')
             .then(res => {
                 setDbCategories(res.data && res.data.length > 0 ? res.data.map(c => c.name) : defaultCategories);
             })
@@ -101,7 +101,7 @@ function UserSettings() {
 
         setLoading(true);
         try {
-            const res = await axios.put('http://localhost:5000/api/reader/update', {
+            const res = await axios.put('https://murthnews-api.onrender.com/api/reader/update', {
                 id: user._id,
                 ...formData
             });
@@ -137,7 +137,7 @@ function UserSettings() {
             if (confirm2) {
                 setLoading(true);
                 try {
-                    await axios.delete(`http://localhost:5000/api/users/${user._id}`);
+                    await axios.delete(`https://murthnews-api.onrender.com/api/users/${user._id}`);
                     localStorage.removeItem('reader_user');
                     alert("Account eliminato. Ci dispiace vederti andare.");
                     navigate('/');

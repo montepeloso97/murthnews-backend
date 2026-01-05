@@ -5,7 +5,7 @@ const SiteLogo = ({ theme }) => {
   const [logoUrl, setLogoUrl] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/settings')
+    axios.get('https://murthnews-api.onrender.com/api/settings')
       .then(res => { if (res.data && res.data.logoUrl) setLogoUrl(res.data.logoUrl); })
       .catch(() => {});
   }, []);
