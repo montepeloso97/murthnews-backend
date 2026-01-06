@@ -35,7 +35,8 @@ app.use(cors({
     "https://www.murthnews.com",
     "https://murthnews.com",
     "https://www.murtheditor.com",
-    "https://murtheditor.com"
+    "https://murtheditor.com",      // <--- OCCHIO ALLA VIRGOLA QUI!
+    "https://admin.murthnews.com"   // <--- NUOVA RIGA
   ],
   credentials: true
 }));
