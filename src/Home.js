@@ -244,6 +244,10 @@ function Home() {
     const newsUcraina = filterByTopic('Ucraina');
     const newsRussia  = filterByTopic('Russia');
     const newsMondo   = filterByTopic('Mondo');
+    const newsItalia      = filterByTopic('Italia');      // Cerca news con categoria o tag "Italia"
+    const newsMedioriente = filterByTopic('Medioriente');
+    const newsIran        = filterByTopic('Iran');
+    const newsGuerra      = filterByTopic('Guerra');
 
     // 3. NUOVO COMPONENTE GRAFICO: RIGA A SCORRIMENTO ORIZZONTALE
     const CategoryRow = ({ title, data, color }) => {
@@ -366,23 +370,45 @@ function Home() {
                 /* --- GENERALI --- */
                 .container { max-width: 1240px; margin: 0 auto; padding: 20px; padding-top: 140px; padding-bottom: 80px; }
                 
-                /* HEADER BUTTONS (ARROTONDATI E NO ROSSO) */
-                .nav-link { 
-                    font-weight: 500; 
-                    font-size: 0.95rem; 
-                    text-transform: uppercase; 
-                    letter-spacing: 0.5px;
-                    color: ${C.text}; 
-                    cursor: pointer; 
-                    padding: 8px 16px; /* Più larghi per effetto bottone */
-                    transition: all 0.2s ease;
-                    border-radius: 30px; /* ARROTONDATI */
-                }
-                .nav-link:hover { 
-                    color: ${C.text}; /* NON ROSSO, ma colore testo (bianco in dark) */
-                    background-color: ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}; 
-                    text-decoration: none; 
-                }
+                /* HEADER BUTTONS - COMPATTI E NEUTRI */
+/* HEADER BUTTONS - ZERO GLOW / ZERO SHADOW */
+.nav-link { 
+    font-family: 'Poppins', sans-serif; 
+    font-weight: 600; 
+    font-size: 0.78rem; 
+    color: ${C.text} !important; 
+    cursor: pointer; 
+    padding: 6px 12px; 
+    border-radius: 20px; 
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    text-decoration: none !important;
+    display: flex;
+    align-items: center;
+    
+    /* RESET TOTALE DI OGNI POSSIBILE BAGLIORE */
+    box-shadow: none !important;
+    text-shadow: none !important;      /* Rimuove ombre del testo */
+    filter: none !important;           /* Rimuove filtri grafici (glow) */
+    backdrop-filter: none !important;  /* Rimuove effetti sfocatura dietro */
+    outline: none !important;          /* Rimuove il bordo di focus */
+    
+    transition: background-color 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+.nav-link:hover { 
+    /* Solo colore di sfondo piatto */
+    background-color: ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'} !important; 
+    color: ${C.text} !important;
+    
+    /* Riafferma il reset anche in stato hover */
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+    transform: none !important;
+}
 
                 /* HEADER PROFILE (FOTO + NOME) */
                 .profile-pill {
@@ -638,29 +664,42 @@ function Home() {
             `}</style>
 
             {/* --- HEADER --- */}
-            <div style={{
-                position: 'fixed', top: 0, left: 0, width: '100%', height: '70px',
-                background: C.headerBg, borderBottom: `1px solid ${C.border}`, zIndex: 1000,
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px',
-                boxShadow: scrolled ? '0 4px 15px rgba(0,0,0,0.05)' : 'none', transition: 'box-shadow 0.3s'
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '25px' }}>
-                    {isMobile && (
-                        <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{ background: 'none', border: 'none', fontSize: '1.6rem', color: C.text, padding: 0, cursor: 'pointer', display: 'flex' }}>
-                            ☰
-                        </button>
-                    )}
+<div style={{
+    position: 'fixed', top: 0, left: 0, width: '100%', height: '70px',
+    background: C.headerBg, borderBottom: `1px solid ${C.border}`, zIndex: 1000,
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 30px',
+    boxShadow: scrolled ? '0 4px 20px rgba(0,0,0,0.08)' : 'none', transition: 'all 0.3s'
+}}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
+        {isMobile && (
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{ background: 'none', border: 'none', fontSize: '1.6rem', color: C.text, cursor: 'pointer' }}>
+                ☰
+            </button>
+        )}
 
-                    <div onClick={() => navigate('/')} style={{ cursor: 'pointer', display: 'flex' }}><SiteLogo theme={theme} /></div>
+        {/* Logo rimpicciolito e spostato più verso il centro */}
+        <div onClick={() => navigate('/')} style={{ 
+        cursor: 'pointer', 
+        display: 'flex', 
+        transform: 'scale(0.8)' // Logo ancora più piccolo
+    }}>
+        <SiteLogo theme={theme} />
+    </div>
 
-                    {!isMobile && (
-                        <div style={{ display: 'flex', gap: '5px', marginLeft: '10px' }}>
-                            <span className="nav-link" onClick={() => navigate('/')}>Home</span>
-                            <span className="nav-link" onClick={() => navigate('/categories')}>Categorie</span>
-                            <span className="nav-link" onClick={() => navigate('/policy')}>Info</span>
-                        </div>
-                    )}
-                </div>
+    {!isMobile && (
+        <div style={{ 
+            display: 'flex', 
+            gap: '2px', // Tasti quasi attaccati tra loro
+            marginLeft: '0px' // Eliminato spazio dal logo
+        }}>
+            <span className="nav-link" onClick={() => navigate('/')}>Home</span>
+            <span className="nav-link" onClick={() => navigate('/categories')}>Categorie</span>
+            <span className="nav-link" onClick={() => navigate('/policy')}>Info</span>
+        </div>
+    )}
+</div>
+    
+    {/* ... resto della header (pulsante tema e profilo) rimane invariato ... */}
 
                 <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
                     <button onClick={toggleTheme} style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', padding: '5px', lineHeight: 1 }}>
@@ -685,14 +724,29 @@ function Home() {
             </div>
 
             {/* --- MOBILE MENU --- */}
-            {isMobile && isMenuOpen && (
-                <div style={{ position: 'fixed', top: 70, left: 0, width: '100%', height: '100%', background: C.bg, zIndex: 1001, padding: 20, display: 'flex', flexDirection: 'column', gap: 20, fontSize: '1.2rem', fontWeight: 'bold' }}>
-                    <span onClick={() => navigate('/')}>Home</span>
-                    <span onClick={() => navigate('/categories')}>Categorie</span>
-                    <span onClick={() => navigate('/login')}>Login</span>
-                </div>
-            )}
+{isMobile && isMenuOpen && (
+    <div style={{ 
+        position: 'fixed', top: 70, left: 0, width: '100%', height: '100%', 
+        background: C.bg, zIndex: 1001, padding: '20px 30px', 
+        display: 'flex', flexDirection: 'column', 
+        gap: '12px', // Bottoni più attaccati tra loro
+        fontSize: '1.1rem', 
+        fontWeight: '700',
+        fontFamily: "'Poppins', sans-serif"
+    }}>
+        <span onClick={() => { navigate('/'); setIsMenuOpen(false); }} style={{ cursor: 'pointer', padding: '5px 0' }}>Home</span>
+        <span onClick={() => { navigate('/categories'); setIsMenuOpen(false); }} style={{ cursor: 'pointer', padding: '5px 0' }}>Categorie</span>
+        
+        {/* Mostra Login solo se non c'è l'utente, altrimenti mostra Dashboard */}
+        {!user ? (
+            <span onClick={() => { navigate('/login'); setIsMenuOpen(false); }} style={{ cursor: 'pointer', padding: '5px 0' }}>Login</span>
+        ) : (
+            <span onClick={() => { navigate('/dashboard'); setIsMenuOpen(false); }} style={{ cursor: 'pointer', padding: '5px 0', color: C.accent }}>Il mio Profilo</span>
+        )}
 
+        <span onClick={() => { navigate('/policy'); setIsMenuOpen(false); }} style={{ cursor: 'pointer', padding: '5px 0' }}>Info</span>
+    </div>
+)}
             {/* --- HEADER 2 (Categorie) --- */}
             <div style={{ position: 'fixed', top: 70, left: 0, width: '100%', height: 50, background: C.bg, borderBottom: `1px solid ${C.border}`, zIndex: 999 }}>
                 <Header2 theme={theme} isStatic={true} />
@@ -701,86 +755,105 @@ function Home() {
             {/* --- MAIN CONTENT --- */}
             <div className="container">
 
-                {/* === BREAKING NEWS WIDGET (Minimal & 2 Ore) === */}
+                {/* === BREAKING NEWS WIDGET (DESIGN ROSSO MODERNO) === */}
                 {breaking && (new Date() - new Date(breaking.createdAt) < 7200000) && (
                     <>
+                        {/* 1. STILE CSS SPECIFICO PER QUESTO WIDGET */}
                         <style>{`
                             .breaking-banner {
-                                /* Design Minimal: Sfondo leggero invece del rosso pieno */
-                                background: ${isDark ? 'rgba(220, 38, 38, 0.15)' : '#fef2f2'};
-                                border-left: 4px solid ${C.live}; /* Linea rossa a sinistra */
-                                border-radius: 6px;
-                                padding: 16px 24px;
+                                background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+                                position: relative;
+                                overflow: hidden;
+                                padding: 18px 25px;
+                                border-radius: 12px;
                                 margin-bottom: 40px;
                                 display: flex;
                                 flex-direction: ${isMobile ? 'column' : 'row'};
                                 align-items: center;
                                 justify-content: space-between;
                                 gap: 20px;
-                                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-                                transition: transform 0.2s ease;
+                                box-shadow: 0 10px 25px -5px rgba(220, 38, 38, 0.5);
+                                border: 1px solid rgba(255,255,255,0.1);
+                                transition: transform 0.2s ease, box-shadow 0.2s ease;
                             }
                             .breaking-banner:hover {
-                                transform: translateY(-1px);
-                                box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.08);
+                                transform: translateY(-2px);
+                                box-shadow: 0 15px 30px -5px rgba(220, 38, 38, 0.6);
                             }
-                            
+                            .breaking-banner::before {
+                                content: '';
+                                position: absolute;
+                                top: 0; left: -50%;
+                                width: 100%; height: 100%;
+                                background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+                                transform: skewX(-25deg);
+                                animation: shine 6s infinite;
+                            }
+                            @keyframes shine {
+                                0% { left: -50%; }
+                                20% { left: 150%; }
+                                100% { left: 150%; }
+                            }
                             .bk-label {
-                                background: ${C.live};
-                                color: white;
-                                padding: 4px 10px;
-                                border-radius: 4px;
-                                font-weight: 800;
-                                font-size: 0.7rem;
-                                letter-spacing: 1.5px;
+                                background: #ffffff;
+                                color: #b91c1c;
+                                padding: 6px 14px;
+                                border-radius: 6px;
+                                font-weight: 900;
+                                font-size: 0.75rem;
+                                letter-spacing: 1px;
                                 text-transform: uppercase;
                                 white-space: nowrap;
-                                display: flex; align-items: center; gap: 6px;
-                                box-shadow: 0 2px 5px rgba(220, 38, 38, 0.3);
+                                display: flex; align-items: center; gap: 8px;
+                                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                                z-index: 2;
                             }
-                            
-                            /* Animazione pallino pulsante */
                             .bk-dot {
-                                width: 6px; height: 6px; background: white; border-radius: 50%;
-                                animation: blink 1.5s infinite;
+                                width: 8px; height: 8px; 
+                                background: #dc2626; 
+                                border-radius: 50%;
+                                animation: pulse-red 1.5s infinite;
                             }
-                            @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-
+                            @keyframes pulse-red { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
                             .bk-text {
-                                font-family: 'Inter', sans-serif; /* Font pulito */
-                                color: ${C.text};
-                                font-size: ${isMobile ? '1.1rem' : '1.15rem'};
-                                font-weight: 600;
-                                line-height: 1.4;
+                                font-family: 'Georgia', serif;
+                                color: #ffffff;
+                                font-size: ${isMobile ? '1.2rem' : '1.4rem'};
+                                font-weight: 700;
+                                line-height: 1.3;
                                 flex: 1;
                                 text-align: ${isMobile ? 'center' : 'left'};
+                                text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                                z-index: 2;
                             }
-
                             .bk-date {
-                                font-size: 0.75rem;
-                                font-weight: 600;
-                                text-transform: uppercase;
-                                color: ${C.meta}; /* Grigio elegante */
-                                white-space: nowrap;
-                                background: ${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)'};
-                                padding: 4px 10px;
+                                font-size: 0.8rem;
+                                font-weight: 700;
+                                color: rgba(255,255,255,0.9);
+                                background: rgba(0,0,0,0.2);
+                                padding: 6px 12px;
                                 border-radius: 20px;
+                                white-space: nowrap;
+                                z-index: 2;
                             }
                         `}</style>
 
-                        <div className="breaking-banner" onClick={() => breaking.link ? window.location.href = breaking.link : null} style={{ cursor: breaking.link ? 'pointer' : 'default' }}>
-
-                            {/* Etichetta Minimal */}
+                        {/* 2. STRUTTURA HTML DEL BANNER */}
+                        <div className="breaking-banner" 
+                             onClick={() => breaking.link ? window.location.href = breaking.link : null} 
+                             style={{ cursor: breaking.link ? 'pointer' : 'default' }}
+                        >
+                            {/* Etichetta Bianca */}
                             <div className="bk-label">
                                 <div className="bk-dot"></div> ULTIM'ORA
                             </div>
 
-                            {/* Testo Pulito */}
+                            {/* Testo Bianco */}
                             <div className="bk-text">
                                 {clean(breaking.text)}
                             </div>
 
-                            {/* Data Discreta */}
+                            {/* Data */}
                             <div className="bk-date">
                                 {new Date(breaking.createdAt).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
                             </div>
@@ -912,6 +985,7 @@ function Home() {
                         )}
                     </div>
                 )}
+
 
                 {/* --- SECONDA PAGINA WIDGET (Titolo su, Cliccabile, Foto DB) --- */}
                 <div className="sp-container">
@@ -1167,6 +1241,40 @@ function Home() {
                             </div>
                         ))}
 
+                        {/* <--- INCOLLA QUESTO SOTTO LA CHIUSURA DEL DIV "SPONSOR" ---> */}
+
+                        {/* --- NUOVA SEZIONE SIDEBAR: RUSSIA --- */}
+                        <div style={{ marginTop: '50px' }}>
+                            {/* Header Sidebar RUSSIA (Rosso) */}
+                            <div className="sidebar-header" style={{ borderTop: '2px solid #dc2626' }}>
+                                <span style={{ color: '#dc2626', marginRight: '5px' }}>●</span> RUSSIA
+                            </div>
+
+                            {/* LISTA NOTIZIE RUSSIA (Ranking 1-5) */}
+                            {newsRussia.slice(0, 2).map((n, index) => (
+                                <div key={n._id} className="side-item" onClick={() => navigate(`/news/${n.slug}`)}>
+                                    {/* 1. NUMERO */}
+                                    <div className="side-rank">{index + 1}</div>
+
+                                    {/* 2. TESTI */}
+                                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                        <div style={{
+                                            fontSize: '0.65rem', fontWeight: '800', color: '#dc2626', /* Colore Rosso */
+                                            textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.5px'
+                                        }}>
+                                            {n.category}
+                                        </div>
+                                        <div className="side-title">{clean(n.title)}</div>
+                                        <div className="side-meta">{formatDate(n.createdAt)}</div>
+                                    </div>
+
+                                    {/* 3. FOTO MINI */}
+                                    <img src={n.coverImage} className="side-img-mini" alt="" />
+                                </div>
+                            ))}
+                        </div>
+
+
                         {/* --- BANNER ADS (LOGICA DINAMICA) --- */}
                         <div style={{
                             marginTop: '50px',
@@ -1211,7 +1319,15 @@ function Home() {
 
                     </div>
 
+
                 </div> {/* FINE sp-container (Era questo il problema per le altre notizie!) */}
+
+                {/* --- INSERISCI QUI: ITALIA 3 NEWS (Sotto allo Sponsor/Seconda Pagina) --- */}
+<CategoryRow 
+    title="Italia 3 News" 
+    data={newsItalia.slice(0, 4)}  /* <--- MODIFICA QUI: Prende solo le prime 4 */
+    color="#008C45" 
+/>
 
                 {/* --- 3. ALTRE NOTIZIE (Griglia Sotto - LIMITATA A 3) --- */}
                 <div style={{ marginBottom: '60px' }}>
@@ -1263,11 +1379,15 @@ function Home() {
                 {/* 2. UCRAINA (Colore Giallo/Oro) */}
                 <CategoryRow title="Ucraina" data={newsUcraina} color="#eab308" />
 
-                {/* 3. RUSSIA (Colore Rosso) */}
-                <CategoryRow title="Russia" data={newsRussia} color="#dc2626" />
-
                 {/* 4. MONDO (Colore Verde Smeraldo) */}
                 <CategoryRow title="Dal Mondo" data={newsMondo} color="#059669" />
+
+                {/* ... dopo <CategoryRow title="Dal Mondo" ... /> */}
+
+                {/* NUOVE CATEGORIE IN BASSO */}
+                <CategoryRow title="Medioriente" data={newsMedioriente} color="#d97706" /* Arancione scuro */ />
+                <CategoryRow title="Iran" data={newsIran} color="#be123c" /* Rosso scuro */ />
+                <CategoryRow title="Scenari di Guerra" data={newsGuerra} color="#57534e" /* Grigio Pietra */ />
 
                 {/* -------------------------------------------------------- */}
 

@@ -2371,6 +2371,44 @@ app.get(/.*/, (req, res) => {
 });
 // --- FINE MODIFICA ---
 
+// --- SITEMAP GENERATOR ---
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    // 1. Recupera le pagine (Assicurati che 'Page' sia il nome del tuo modello)
+    const pages = await Page.find({}, 'slug updatedAt'); 
+    
+    // Decommenta sotto se hai già il modello News/Post
+    // const news = await Post.find({}, 'slug updatedAt');
+
+    const domain = 'https://www.murthnews.com';
+
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
+
+    // Home Page
+    xml += `<url><loc>${domain}/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>`;
+
+    // Loop Pagine Statiche
+    pages.forEach(p => {
+      xml += `<url><loc>${domain}/p/${p.slug}</loc><lastmod>${new Date(p.updatedAt).toISOString()}</lastmod><priority>0.8</priority></url>`;
+    });
+
+    /* Loop News (Decommenta quando pronto)
+    news.forEach(n => {
+      xml += `<url><loc>${domain}/news/${n.slug}</loc><lastmod>${new Date(n.updatedAt).toISOString()}</lastmod><priority>0.9</priority></url>`;
+    });
+    */
+
+    xml += `</urlset>`;
+    res.header('Content-Type', 'application/xml');
+    res.send(xml);
+
+  } catch (err) {
+    console.error("Errore Sitemap:", err);
+    res.status(500).send("Errore generazione sitemap");
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`>>> Server MurthEditor attivo su porta ${PORT}`);

@@ -4,6 +4,7 @@ import axios from 'axios';
 import SiteLogo from './SiteLogo';
 import Footer from './Footer';
 import Header2 from './Header2'; // <--- AGGIUNGI QUESTO
+import { Helmet } from 'react-helmet';
 
 function NewsPage() {
     const { slug } = useParams();
@@ -22,6 +23,8 @@ function NewsPage() {
             return;
         }
 
+
+    
         // --- FIX: Cerca l'ID in tutti i posti possibili ---
         // 1. ID diretto nell'articolo
         // 2. ID nell'oggetto autore (se popolato)
@@ -426,8 +429,8 @@ function NewsPage() {
     const isBigLayout = article?.importance === "Rilievo";
     
     // Variabili Logiche
-    const isLocked = (article?.importance === "Ultim'ora" || article?.visibility === 'paid') && (!user || user.livello === 'standard');
-    
+// MODIFICA: Rimosso il blocco per "Ultim'ora". Ora blocca SOLO se visibility è 'paid' o 'private'.
+const isLocked = (article?.visibility === 'paid' || article?.visibility === 'private') && (!user || user.livello === 'standard');    
     // Immagini
     const images = article?.gallery && article.gallery.length > 0 ? article.gallery : (article?.coverImage ? [article.coverImage] : []);
 
@@ -1498,6 +1501,16 @@ html, body {
     <Header2 theme={theme} isStatic={true} />
 </div>
             )}
+
+            {/* AGGIUNGI QUESTO DENTRO IL RETURN DI NEWSPAGE.JS */}
+<Helmet defer={false}>
+    <title>{article ? `${clean(article.title)} | MurthNews` : "Caricamento... | MurthNews"}</title>
+    <meta property="og:title" content={article ? clean(article.title) : "MurthNews"} />
+    <meta property="og:description" content={article ? clean(article.subtitle) : "Leggi la notizia su MurthNews"} />
+    <meta property="og:image" content={article ? article.coverImage : "https://www.murthnews.com/favicon.jpg"} />
+    <meta property="og:url" content={window.location.href} />
+    <meta property="og:type" content="article" />
+</Helmet>
 
             {/* ========================================================== */}
             {/* LOGICA LAYOUT 2: TITOLO RILEVANTE (Fuori griglia)          */}

@@ -23,6 +23,7 @@ import UserLibrary from './UserLibrary';
 import CategoryPage from './CategoryPage';
 import CategoriesPage from './CategoriesPage';
 import AuthorPage from './AuthorPage';
+import OlimpiadiPage from './OlimpiadiPage';
 
 function App() {
   return (
@@ -64,9 +65,9 @@ function App() {
         <Route path="/policy" element={<PolicyPage />} />
         <Route path="/lavora-con-noi" element={<WorkWithUs />} />
         <Route path="/termini" element={<TermsPage />} />
+        <Route path="/olimpiadi" element={<OlimpiadiPage />} />
 
         {/* ⚠️ FALLBACK (Se la pagina non esiste, torna alla Home) */}
-        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );

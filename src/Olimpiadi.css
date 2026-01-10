@@ -1,0 +1,335 @@
+/* src/Olimpiadi.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&display=swap');
+
+:root {
+  --primary-blue: #00aaff;
+  --deep-blue: #003366;
+  --ice-white: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-bg: rgba(255, 255, 255, 0.1);
+}
+
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f0f9ff;
+  overflow-x: hidden;
+}
+
+/* --- DARK MODE --- */
+.dark-mode {
+  background-color: #050a14;
+  color: white;
+  --deep-blue: #ffffff;
+}
+
+/* ================= HEADER FROZEN ================= */
+.glass-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s ease;
+}
+
+.dark-mode .glass-header {
+  background: rgba(0, 10, 30, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Tasti Menu */
+.nav-link {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: white; 
+  text-shadow: 0 0 5px rgba(0,0,0,0.5);
+  opacity: 0.9;
+  transition: all 0.3s;
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.nav-link:hover {
+  opacity: 1;
+  color: var(--primary-blue);
+  text-shadow: 0 0 15px rgba(0, 170, 255, 0.8);
+}
+
+/* ================= HERO SECTION ================= */
+.hero-wrapper {
+  position: relative;
+  height: 75vh; 
+  min-height: 550px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+  padding-top: 130px; 
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, 
+    rgba(0,10,30,0.4) 0%, 
+    rgba(0,0,0,0.05) 60%, 
+    var(--bg-fade, #f0f9ff) 100%);
+  z-index: 1;
+}
+
+.dark-mode .hero-overlay {
+  --bg-fade: #050a14;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  animation: floatUp 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Loghi Hero */
+.hero-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 15px;
+}
+
+.main-logo {
+  height: 160px;
+  filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.6));
+  animation: breathe 4s infinite ease-in-out;
+}
+
+.partner-logo {
+  height: 100px; 
+  width: auto;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
+  transition: transform 0.3s;
+}
+
+.partner-logo:hover {
+  transform: scale(1.1);
+}
+
+.hero-title {
+  font-size: 4.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: -2px;
+  text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  background: linear-gradient(to right, #fff, #cceeff, #fff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 1.3rem;
+  color: #aaddff;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  margin-top: 5px;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(0, 150, 255, 0.8);
+}
+
+/* ================= MENU SPORT ================= */
+.sports-container {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 35px;
+  flex-wrap: wrap;
+}
+
+.sport-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 10px 20px;
+  border-radius: 50px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: help;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s;
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.sport-pill span { font-size: 1.1rem; }
+
+.sport-pill:hover {
+  background: white;
+  color: #003366;
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+  border-color: white;
+  text-shadow: none;
+}
+
+/* ================= NEWS SECTION ================= */
+.news-section {
+  position: relative;
+  z-index: 5;
+  padding: 40px 20px 120px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 50px;
+  font-weight: 900;
+  color: var(--deep-blue);
+  text-transform: uppercase;
+}
+
+.dark-mode .section-title { color: white; }
+
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 40px;
+}
+
+/* Card Olografica */
+.holo-card {
+  position: relative;
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.dark-mode .holo-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.holo-card:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 20px 50px rgba(0, 170, 255, 0.3);
+  border-color: var(--primary-blue);
+}
+
+.card-img-box {
+  height: 250px;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.holo-card:hover .card-img-box img {
+  transform: scale(1.1);
+}
+
+.badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: var(--primary-blue);
+  color: white;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.card-info {
+  padding: 30px;
+}
+
+.card-info h3 {
+  font-size: 1.4rem;
+  margin: 0 0 15px;
+  line-height: 1.3;
+  color: #002244;
+}
+
+.dark-mode .card-info h3 { color: white; }
+
+.card-info p {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.dark-mode .card-info p { color: #aaa; }
+
+.btn-glow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  color: var(--primary-blue);
+  font-weight: 800;
+  text-decoration: none;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s;
+}
+
+.btn-glow:hover {
+  color: #0055aa;
+  gap: 15px;
+  text-shadow: 0 0 8px rgba(0, 170, 255, 0.5);
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 30px rgba(255,255,255,0.6)); }
+  50% { transform: scale(1.05); filter: drop-shadow(0 0 50px rgba(0, 200, 255, 0.8)); }
+}
+
+@keyframes floatUp {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .hero-wrapper { height: auto; min-height: 85vh; padding-top: 100px; padding-bottom: 40px; }
+  .hero-title { font-size: 3rem; }
+  .glass-header { height: 70px; padding: 0 20px; }
+  .main-logo { height: 120px; }
+  .partner-logo { height: 80px; }
+  .sports-container { gap: 8px; }
+  .sport-pill { padding: 8px 12px; font-size: 0.75rem; }
+}
